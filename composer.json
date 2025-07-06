@@ -1,0 +1,30 @@
+{
+    "name": "srvkit/auth",
+    "description": "An advance and flexible authentication package for codeigniter 4+",
+    "type": "library",
+    "require": {
+        "firebase/php-jwt": "6.11"
+    },
+    "require-dev": {
+        "codeigniter4/framework": "^4.2.3"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SrvKit\\Auth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rahul Sharma",
+            "email": "rahulksharma199r@gmail.com",
+            "role": "developer"
+        }
+    ],
+    "extra": {
+        "codeigniter4": {
+            "discoverable": true
+        }
+    },
+    "minimum-stability": "dev"
+}
