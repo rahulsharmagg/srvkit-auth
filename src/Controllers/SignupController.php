@@ -13,6 +13,7 @@ class SignupController extends BaseController
 	use ResponseTrait;
 
 	public function index(int|bool $step = false){
+		$cookie = null;
 		if($step == 2) {
 			$cookie = $this->request->getCookie('__srvkit-s1__'); // check step 1 is still in progress or not
 			if(!$cookie) {
@@ -20,7 +21,7 @@ class SignupController extends BaseController
 			}
 		}
 
-		return view('SrvKit\Auth\Views\auth', ['path' => $this->request->getPath()]);
+		return view('SrvKit\Auth\Views\auth', ['path' => $this->request->getPath(), 'cookie' => json_decode($cookie)]);
 	}
 
 	/**
@@ -75,19 +76,19 @@ class SignupController extends BaseController
 				$name = $this->request->getPost('name');
 				$username = $this->request->getPost('username');
 				$password = $this->request->getPost('password');
-				$cookie = new Cookie('__srvkit-s1__', json_encode([
-				    'name' => $name,
+				$cookie = (new Cookie('__srvkit-s1__', json_encode([
+				    'name'     => $name,
 				    'username' => $username,
-				    'password' => $password
-				]), [
-				   "expire" => 3600,
-				   "httponly" => true,
-				   "secure" => false,
-				   "samesite" => 'Strict',
-				   "path"=> '/'
-				]);
-				$this->response->setCookie($cookie);
+				    'password' => $password,
+				])))
+				    ->withExpires(time() + 600)
+				    ->withPath('/') 
+				    ->withHTTPOnly(true)
+				    ->withSecure(request()->isSecure())
+				    ->withSameSite('Lax');
+
 				$this->session->setFlashdata('message', 'info:User not created yet!, email & role is needed to proceed next.');
+				$this->response->setCookie($cookie);
 				return $this->response->redirect('/auth/signup/2');
 			}
 
@@ -118,7 +119,6 @@ class SignupController extends BaseController
 			}
 
 			$this->response->setcookie('__srvkit-s1__', '', time() - 1000, '', '/', '', false, true, 'Strict');
-			// dd(json_decode($this->request->getCookie('__srvkit-s1__'), true));
 			return $this->response->setJSON([
 				'message' => 'New user created successfully.',
 				'status' => 'success',
@@ -132,5 +132,26 @@ class SignupController extends BaseController
 			$this->session->setFlashdata('message', 'error:'.$e->getMessage());
 			return redirect()->to('auth/signup/'.$step, 302)->withInput();
 		}
+	}
+
+	public function cancel(){
+		$username = $this->request->getPost('username');
+		$cookie = $this->request->getCookie('__srvkit-s1__');
+		if($username && $cookie){
+			$cookie = json_decode($cookie);
+			if($cookie->username == $username){
+				$cookie = (new Cookie('__srvkit-s1__', ''))
+				    ->withExpires(time() - 3600)
+				    ->withPath('/') 
+				    ->withHTTPOnly(true)
+				    ->withSecure(request()->isSecure())
+				    ->withSameSite('Lax');
+
+				$this->session->setFlashdata('message', 'info:Signup Cancelled!');
+				return $this->response->setCookie($cookie)->redirect(base_url('auth/signup/1'));
+				
+			}
+		}
+		return redirect()->back();
 	}
 }

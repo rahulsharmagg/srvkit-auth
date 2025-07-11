@@ -41,8 +41,9 @@ class Theme extends Cell
     // protected $view = 'style';
     public function mount(): void
     {
-        $auth = config('Auth');
+        $auth = config(Auth::class);
         $this->theme = $auth->theme;
-        $this->setView('style');
+        $this->setView('srvkit-theme-'.$this->theme);
+        // $this->setView('style');
     }
 }

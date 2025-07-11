@@ -2,28 +2,64 @@
 
 namespace SrvKit\Auth\Services;
 
+use CodeIgniter\Config\Services;
+use CodeIgniter\Cookie\Cookie;
+use CodeIgniter\View\View;
+use Exception;
 use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
 use SrvKit\Auth\Config\Auth as AuthConfig;
 use SrvKit\Auth\Entities\User;
 use SrvKit\Auth\Exceptions\AuthException;
 use SrvKit\Auth\Models\UserModel;
+use SrvKit\Auth\Traits\AccessTokenTrait;
+use SrvKit\Auth\Traits\RefreshTokenTrait;
 
 class Auth
 {
-    public ?User $user;
+    use RefreshTokenTrait;
+    use AccessTokenTrait;
 
-    public ?bool $isValidRefreshToken;
-
-    public ?bool $isValidAccessToken;
-    
-    private $refreshKey, $accessKey;
+    public  ?User       $user;
+    public  ?bool       $isValidRefreshToken;
+    public  ?bool       $isValidAccessToken;
+    public  UserModel   $userModel;
+    public  Cookie      $cookie;
+    public  String      $refreshToken;
+    public  String      $action;
+    public  View        $renderer;
+    private AuthConfig  $config;
 
     public function __construct(AuthConfig $config)
     {
-        $this->refreshKey = $config::REFRESH_KEY;
-        $this->accessKey = $config::ACCESS_KEY;
+        $this->config = $config;
         $this->userModel = new UserModel();
+    }
+
+    public function action(string $action): self
+    {
+        try {
+            if(!in_array($action, $this->config->actions)){
+                throw new AuthException('Invalid Action.');
+            }
+            $this->action = $action;
+            return $this;
+        } catch (Exception $e) {
+            throw new AuthException($e->getMessage());
+        }
+    }
+
+    /**
+     * Render the view of the action
+     * @param  string $action [description]
+     * @return [type]         [description]
+     */
+    public function view(string $action = '', array $data = [])
+    {
+        if(empty($action)){
+            $action = $this->action;
+        }
+        return view('SrvKit\Auth\Views\action', ['action' => $action, ...$data]);
     }
 
     public function login(string $username, string $password): self
@@ -50,59 +86,16 @@ class Auth
         return $this;
     }
 
-
-    /**
-     * Generates a JWT token
-     * @return string JWT token
-     */
-    public function generateRefreshToken(): string
+    public function obtainAccessFromLogin()
     {
-        $issuedAt = time();
-        $expiration = $issuedAt + AuthConfig::REFRESH_TOKEN_EXP;
+        if(!$this->user) throw new AuthException('Invalid Operation.');
+        $refreshToken = $this->generateRefreshToken();
+        $this->saveRefreshToken($this->user->id, $refreshToken);
+        $this->setRefreshTokenCookie($refreshToken);
 
-        $data = [
-            "username" => $this->user->username,
-        ];
-
-        $payload = [
-            'iss' => base_url(),
-            'iat' => $issuedAt,
-            'exp' => $expiration,
-            'data' => $data,
-        ];
-
-        return JWT::encode($payload, $this->refreshKey, 'HS256');
-    }
-
-    public function generateAccessToken(): string
-    {
-        $issuedAt = time();
-        $expiration = $issuedAt + AuthConfig::ACCESS_TOKEN_EXP;
-
-        $data = [
-            "username" => $this->user->username,
-        ];
-
-        $payload = [
-            'iss' => base_url(),
-            'iat' => $issuedAt,
-            'exp' => $expiration,
-            'data' => $data,
-        ];
-
-        return JWT::encode($payload, $this->accessKey, 'HS256');
-    }
-
-    public function validateRefreshToken(string $token): self
-    {   
-        try {
-            $payload = JWT::decode($token, new Key($this->refreshKey, 'H256'));
-            $this->user = $this->userModel->where(['username' => $payload->data->username, 'email' => $payload->data->email]);
-            $this->isValidRefreshToken = true;
-        } catch (Exception $e) {
-            $this->isValidRefreshToken = false;
-        }
-        return $this;
+        $accessToken = $this->generateAccessToken();
+        $accessUserType = $this->user->role;
+        return ['access_token' => $accessToken, 'access_type' => $accessUserType];
     }
 }
 

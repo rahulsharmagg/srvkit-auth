@@ -3,20 +3,9 @@
 namespace SrvKit\Auth\Config;
 
 use CodeIgniter\Config\BaseService;
-use CodeIgniter\Session\Session;
-use CodeIgniter\Session\Handlers\DatabaseHandler;
-use CodeIgniter\Session\Handlers\FileHandler;
-use CodeIgniter\Session\Handlers\Database\MySQLiHandler;
-use CodeIgniter\Session\Handlers\Database\PostgreHandler;
-use Config\Database;
-use Config\Services as AppServices;
 use SrvKit\Auth\Services\Auth;
-use Srvkit\Auth\Config\Session as SessionConfig;
 use Srvkit\Auth\Config\Auth as AuthConfig;
-
-
-
-
+use SrvKit\Auth\Services\TempLink;
 
 /**
  * Services Configuration file.
@@ -43,5 +32,14 @@ class Services extends BaseService
         }
 
         return new Auth($config ?? config('Auth'));
+    }
+
+    public static function tempLink(String $token = '', bool $getShared = true): TempLink
+    {
+        if ($getShared) {
+            return static::getSharedInstance('templink', $token);
+        }
+
+        return new TempLink($token ?? '');
     }
 }

@@ -6,7 +6,8 @@
         "firebase/php-jwt": "6.11"
     },
     "require-dev": {
-        "codeigniter4/framework": "^4.2.3"
+        "codeigniter4/framework": "^4.2.3",
+        "vimeo/psalm": "^6.5"
     },
     "license": "MIT",
     "autoload": {

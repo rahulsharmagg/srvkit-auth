@@ -9,6 +9,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Session\Session;
 use Psr\Log\LoggerInterface;
+use SrvKit\Auth\Config\Auth;
 
 /**
  * Class BaseController
@@ -45,6 +46,11 @@ abstract class BaseController extends Controller
     protected Session $session;
 
     /**
+     * Auth config
+     */
+    protected Auth $config;
+
+    /**
      * @return void
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
@@ -53,7 +59,8 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
-        $config = new \SrvKit\Auth\Config\Session();
-        $this->session = \Config\Services::session($config);
+        $this->config = config(Auth::class);
+        $sessionConfig = new \SrvKit\Auth\Config\Session();
+        $this->session = \Config\Services::session($sessionConfig);
     }
 }
