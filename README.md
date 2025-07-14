@@ -2,7 +2,7 @@
 
 ![Latest Version](https://img.shields.io/github/v/release/rahulsharmagg/srvkit-auth?label=version)
 ![CI4 Compatibility](https://img.shields.io/badge/CodeIgniter4-%5E4.4-blue?logo=codeigniter)
-![License](https://img.shields.io/github/license/rahulsharmagg/srvkit-auth)
+[![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 ![Issues](https://img.shields.io/github/issues/rahulsharmagg/srvkit-auth)
 ![Stars](https://img.shields.io/github/stars/rahulsharmagg/srvkit-auth?style=social)
 
