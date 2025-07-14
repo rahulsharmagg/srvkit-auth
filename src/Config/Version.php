@@ -2,10 +2,7 @@
 
 namespace SrvKit\Auth\Config;
 
-
-use CodeIgniter\Config\BaseConfig;
-
-class Version extends BaseConfig
+class Version
 {
-    public const VERSION = "1.0.0";
+    public const VERSION = '1.0.2';
 }
