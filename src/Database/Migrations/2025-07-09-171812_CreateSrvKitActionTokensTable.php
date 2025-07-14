@@ -13,7 +13,9 @@ class CreateSrvKitActionTokensTable extends Migration
     public function __construct(?Forge $forge = null)
     {
         parent::__construct($forge);
-        $this->config = config(Auth::class);
+
+        /** @var Auth [description] */
+        $this->config = config('Auth');
     }
 
     public function up()

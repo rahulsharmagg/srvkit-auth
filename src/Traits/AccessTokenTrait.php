@@ -10,14 +10,12 @@ use SrvKit\Auth\Entities\User;
 trait AccessTokenTrait {
 
 	/** @var User $user  */
-	protected function generateAccessToken(): string
+	public function generateAccessToken(array $payload): string
 	{
 	    $issuedAt = time();
 	    $expiration = $issuedAt + AuthConfig::ACCESS_TOKEN_EXP;
 
-	    $data = [
-	        "username" => $this->user->username,
-	    ];
+	    $data = [...$payload];
 
 	    $payload = [
 	        'iss' => base_url(),

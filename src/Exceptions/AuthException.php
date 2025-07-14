@@ -7,8 +7,17 @@ use Exception;
 
 class AuthException extends Exception
 {
-    public function __construct(string $message, int $code = 0, ?Throwable $previous = null)
+    protected $errorCode;
+
+    public function __construct(string $message, string $code = '', ?Throwable $previous = null)
     {
-        parent::__construct($message, $code, $previous);
+        $intCode = is_numeric($code) ? (int) $code : 0;
+        parent::__construct($message, $intCode, $previous);
+        $this->errorCode = $code;
+    }
+
+    public function getErrorCode(): string
+    {
+        return $this->errorCode;
     }
 }
