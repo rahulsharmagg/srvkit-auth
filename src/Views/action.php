@@ -104,7 +104,7 @@ $message = (object) ['type' => $type, 'content' => $content];
 			</div>
 			<div class="form-content">
 				<?= $this->renderSection('icon') ?>
-				<div class="message <?= esc($message->type) ?>"><?= esc($message->content) ?></div>
+				<div class="message <?= esc($message->type) ?>"><?= strip_tags($message->content, "<b><u><i>") ?></div>
 				<div class="text-center">
 					<a class="link" href="/auth/login">Back to login</a>
 				</div>
