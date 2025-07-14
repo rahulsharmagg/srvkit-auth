@@ -25,8 +25,8 @@ trait ActionTrait {
 				$tempLink->for($user)->action('reset-password')->create();
 				$tempLink->save();
 				$link = $tempLink->link();
-				// dd($link); // send email from here
-				$message = 'An email has been successfully sent to "'.$user->email.'", check and follow the password recovery link';
+				dd($link); // send email from here
+				$message = 'An email has been successfully sent to <b>"'.$user->email.'"</b>, check and follow the password recovery link';
 				return redirect()->to('auth?for=forgot-password')->with('message', 'success:'.$message)->with('icon', 'success');
 				// return view($this->config->views['action'], ['action' => 'message-block']);
 			} else {
@@ -67,11 +67,9 @@ trait ActionTrait {
 				return redirect()->back()->withInput()->with('message', 'error:'.$errors[0]);
 			}
 
-			$newPassword = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
-
+			$newPassword = $this->request->getPost('password');
 			$userModel = new UserModel();
 			$userModel->where('id', $tempLink->user->id)->set('password', $newPassword)->update();
-
 			$tempLink->use();
 			$message = 'Password Update Successfully.';
 			return redirect()->to('auth?for=reset-password')->with('message', 'success:'.$message)->with('icon', 'success');

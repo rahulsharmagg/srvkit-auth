@@ -72,11 +72,11 @@ class Auth
             $this->user = $this->userModel->where('username', $username)->first();
 
             if (!$this->user) {
-                throw new AuthException('Invalid username or password', 401);
+                throw new AuthException('Invalid username or password (E20211)', 401);
             }
-
+            
             if (!password_verify($password, $this->user->password)) {
-                throw new AuthException('Invalid username or password', 401);
+                throw new AuthException('Invalid username or password (E20212)', 401);
             }
 
             return $this;

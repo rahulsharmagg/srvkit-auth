@@ -113,6 +113,7 @@ class UserModel extends Model
      */
     protected function avatar(array $data)
     {
+        log_message('debug', 'Calling Avatar');
         if (isset($data['data']['name'])) {
             $data['data']['avatar'] = AvatarHelper::generateAvatar($data['data']['name']);
         }
