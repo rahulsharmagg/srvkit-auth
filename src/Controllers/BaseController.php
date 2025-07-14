@@ -59,7 +59,7 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
-        $this->config = config(Auth::class);
+        $this->config = config('Auth');
         $sessionConfig = new \SrvKit\Auth\Config\Session();
         $this->session = \Config\Services::session($sessionConfig);
     }

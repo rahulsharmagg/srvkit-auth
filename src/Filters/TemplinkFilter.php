@@ -37,7 +37,7 @@ class TemplinkFilter implements FilterInterface
             $tempLink = Services::tempLink();
             $action = $tempLink->verify($token)->getAction();
             if($request->is('get')){
-                return ConfigServices::redirectresponse()->to('auth?action='.$action.'&token='.$token);
+                return ConfigServices::redirectresponse()->to('auth/action/'.$action.'?token='.$token);
             }
         } catch (\Exception $e) {
             return ConfigServices::response()->setStatusCode(403)->appendBody($e->getMessage());

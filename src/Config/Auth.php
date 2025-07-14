@@ -7,6 +7,7 @@ use CodeIgniter\Config\BaseConfig;
 class Auth extends BaseConfig
 {
 
+    public const PREFIX = "SRVKIT";
     /**
      * Set default secret key for ACCESS TOKEN ENCRYPTION
      */
@@ -25,9 +26,12 @@ class Auth extends BaseConfig
     /**
      * Set refresh token expiration time in seconds
      */
-    public const REFRESH_TOKEN_EXP = 3600;
+    public const REFRESH_TOKEN_EXP = 3600; // 1 Hour
 
-    public const TEMP_LINK_EXP = 600; // 10 Min
+    /**
+     * Set Temp link expiration time in seconds
+     */
+    public const TEMP_LINK_EXP = 600; // 10 Mins
 
     /**
      * Set theme for login/signup form 

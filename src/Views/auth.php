@@ -50,7 +50,7 @@ if(isset($cookie->username)) {
 				<input type="password" name="password" id="password" value="<?= old('password') ?>">
 			</div>
 			<div class="flex justify-between items-center">
-				<a class="link" href="/auth?action=forgot-password">Forgot Password?</a>
+				<a class="link" href="/auth/action/forgot-password">Forgot Password?</a>
 				<button type="submit" class="btn">Login</button>
 			</div>
 		</form>

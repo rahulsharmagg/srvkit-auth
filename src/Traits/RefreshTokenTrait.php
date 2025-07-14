@@ -6,9 +6,11 @@ use CodeIgniter\Cookie\Cookie;
 use Exception;
 use SrvKit\Auth\Config\Auth;
 use SrvKit\Auth\Models\UserTokenModel;
+use CodeIgniter\HTTP\IncomingRequest;
+use SrvKit\Auth\Entities\Token;
 
  trait RefreshTokenTrait {
- 	protected function generateRefreshToken():string
+ 	public function generateRefreshToken():string
  	{
  		return bin2hex(random_bytes(64));
  	}
@@ -19,11 +21,11 @@ use SrvKit\Auth\Models\UserTokenModel;
  	 * @param  string $rawRefreshToken [description]
  	 * @return [type]                  [description]
  	 */
- 	protected function saveRefreshToken(?int $userId, string $rawRefreshToken): bool
+ 	public function saveRefreshToken(?int $userId, string $rawRefreshToken): bool
  	{
  		$token = [
  			'user_id' => $userId,
- 			'refresh_token_hash' => password_hash($rawRefreshToken, PASSWORD_ARGON2I),
+ 			'refresh_token_hash' => hash('sha256', $rawRefreshToken),
 			'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
 			'ip_address' => $_SERVER['REMOTE_ADDR'] ?? null,
 			'logged_in_at' => date('Y-m-d H:i:s'),
@@ -39,20 +41,46 @@ use SrvKit\Auth\Models\UserTokenModel;
  		return true;
  	}
 
- 	protected function setRefreshTokenCookie(string $rawtoken):void
+ 	/**
+ 	 * Verifies the refresh token
+ 	 * @return Token [description]
+ 	 * @throws Exception
+ 	 */
+ 	public function verifyRefreshToken(): Token
+ 	{
+ 		/** @var IncomingRequest */
+ 		$request = service('request');
+ 		$refreshToken = $request->getCookie('__srvkit_refreshtoken__');
+ 		if(!$refreshToken) throw new Exception('Refresh token invalid or not found.',);
+
+ 		$userTokenModel = new UserTokenModel();
+
+ 		/** @var Token */
+ 		$token = $userTokenModel->where('refresh_token_hash', hash('sha256', $refreshToken))->first();
+ 		if(!$token) throw new Exception('Refresh token invalid or not found.');
+
+ 		if($token->isExpired()) {
+ 			throw new Exception('Refresh token is expired.');
+ 		}
+
+ 		return $token;
+ 	}
+
+ 	public function setRefreshTokenCookie(string $rawtoken):void
  	{
  		$response = service('response');
- 		$cookie = new Cookie('__srvkit_refreshtoken__', $rawtoken, [
- 			"expire" => $this->config::REFRESH_TOKEN_EXP,
-		   	"httponly" => true,
-		   	"secure" => false,
-		   	"samesite" => 'Strict',
-		   	"path"=> '/'
- 		]);
+
+ 		$cookie = (new Cookie('__srvkit_refreshtoken__', $rawtoken))
+ 		    ->withExpires(time() + $this->config::REFRESH_TOKEN_EXP)
+ 		    ->withPath('/') 
+ 		    ->withHTTPOnly(true)
+ 		    ->withSecure(request()->isSecure())
+ 		    ->withSameSite('Lax');
+ 
  		$response->setcookie($cookie);
  	}
 
- 	protected function clearRefreshTokenCookie(): void
+ 	public function clearRefreshTokenCookie(): void
     {
         setcookie('__srvkit_refreshtoken__', '', time() - 3600, '/', '', true, true);
     }

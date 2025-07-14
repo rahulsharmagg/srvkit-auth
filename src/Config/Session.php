@@ -3,7 +3,6 @@
 namespace SrvKit\Auth\Config;
 
 use CodeIgniter\Session\Handlers\BaseHandler;
-use CodeIgniter\Session\Handlers\DatabaseHandler;
 
 class Session extends \Config\Session
 {
