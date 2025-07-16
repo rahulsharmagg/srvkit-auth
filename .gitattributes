@@ -1,4 +1,7 @@
-/.gitattributes export-ignore
-/.github export-ignore
-/bump.js export-ignore
-/tailwind.config.js export-ignore
+/.gitattributes 			export-ignore
+/.github 					export-ignore
+/bump.js 					export-ignore
+/tailwind.config.js 		export-ignore
+/.phpunit.result.cache 		export-ignore
+/phpunit.xml				export-ignore
+/tests						export-ignore

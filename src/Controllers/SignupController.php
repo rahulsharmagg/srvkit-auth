@@ -21,7 +21,7 @@ class SignupController extends BaseController
 			}
 		}
 
-		return view('SrvKit\Auth\Views\auth', ['path' => $this->request->getPath(), 'cookie' => json_decode($cookie)]);
+		return view('SrvKit\Auth\Views\auth', ['path' => $this->request->getPath()]);
 	}
 
 	/**
