@@ -65,7 +65,7 @@ class Auth extends BaseConfig
      * 'dark', 'default'
      * @var string
      */
-    public string $theme = 'default';
+    public string $theme = 'dark';
 
 
     public array $actions = [
