@@ -53,13 +53,22 @@ class ActionController extends BaseController
 
     // --------------- Add action controller from here ------------------
     // 
+    // 
+    public function logout(): ResponseInterface
+    {
+        $auth = Services::auth();
+        $auth->logout();
+        return redirect()->to('auth/login')->with('message', 'success:Logout Successfully');
+    }
+
+
     public function refreshToken(): ResponseInterface
     {
         try {
             $auth = Services::auth();
             $token = $auth->verifyRefreshToken();
             $user = $token->getUser();
-            $accessToken = $auth->generateAccessToken(['username' => $user->username]);
+            $accessToken = $auth->generateAccessToken(['username' => $user->username, 'role' => $user->role]);
 
             $access = [
                 'token' => $accessToken,

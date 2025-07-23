@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace SrvKit\Auth\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
@@ -20,21 +20,21 @@ class AppSetup extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'srvkit:setup';
+    protected $name = 'srvkit:install';
 
     /**
      * The Command's Description
      *
      * @var string
      */
-    protected $description = 'Setup the authentication.';
+    protected $description = 'Install the srvkit authentication extension.';
 
     /**
      * The Command's Usage
      *
      * @var string
      */
-    protected $usage = 'app:setup [arguments] [options]';
+    protected $usage = 'srvkit:install [arguments] [options]';
 
     /**
      * The Command's Arguments
@@ -57,7 +57,7 @@ class AppSetup extends BaseCommand
      */
     public function run(array $params)
     {
-        CLI::write('The app setup command is not active.', 'yellow');
+        CLI::write('This extions is unable to install at this time.', 'yellow');
         return;
     }
 }

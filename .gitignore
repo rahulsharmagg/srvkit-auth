@@ -125,3 +125,6 @@ _modules/*
 /results/
 /phpunit*.xml
 /.phpunit.*.cache
+
+# node_modules
+node_modules/

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace SrvKit\Auth\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use Config\Paths;
 
 class AppInfo extends BaseCommand
 {
@@ -20,21 +19,21 @@ class AppInfo extends BaseCommand
      *
      * @var string
      */
-    protected $name = 'srvkit:info';
+    protected $name = 'srvkit:version';
 
     /**
      * The Command's Description
      *
      * @var string
      */
-    protected $description = 'Get info about the application.';
+    protected $description = 'Gets the version of srvkit extension';
 
     /**
      * The Command's Usage
      *
      * @var string
      */
-    protected $usage = 'srvkit:info [arguments] [options]';
+    protected $usage = 'srvkit:version [arguments] [options]';
 
     /**
      * The Command's Arguments
@@ -57,10 +56,7 @@ class AppInfo extends BaseCommand
      */
     public function run(array $params)
     {
-        $phpVersion = phpversion();
-        $version = \Config\Version::VERSION;
-
-        CLI::write("Version: $version", 'cyan');
-        CLI::write("PHP Version: $phpVersion", "cyan");
+        $version = \SrvKit\Auth\Config\Version::VERSION;
+        CLI::write("Current Version: $version", 'cyan');
     }
 }

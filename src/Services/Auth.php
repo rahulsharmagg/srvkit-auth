@@ -69,7 +69,7 @@ class Auth
         $refreshToken = $this->generateRefreshToken();
         $this->saveRefreshToken($this->user->id, $refreshToken);
         $this->setRefreshTokenCookie($refreshToken);
-        $payload = ['username' => $this->user->username];
+        $payload = ['username' => $this->user->username, 'role' => $this->user->role];
         $accessToken = $this->generateAccessToken($payload);
         $accessUserType = $this->user->role;
         return array("access" => ['token' => $accessToken, 'type' => $accessUserType]);

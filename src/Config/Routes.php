@@ -23,3 +23,13 @@ $routes->group('auth', ['namespace' => 'SrvKit\Auth\Controllers'], function ($ro
     $routes->post('action/(:segment)', 'ActionController::action/$1');
     $routes->put('action/(:segment)', 'ActionController::action/$1', ['filter' => 'verifytemp']);
 });
+
+/** @var RouteCollection $routes */
+$routes->group('', ['namespace' => 'SrvKit\Auth\Controllers\Dashboard', 'filter' => ['user', 'loggedin']], function ($routes) {
+    $routes->addPlaceholder('username', '^[a-zA-Z0-9\_].+');
+    $routes->get('(:username)/profile', 'DashboardController::profile/$1', ['as' => 'profile']);
+    $routes->get('(:username)/profile/settings', 'DashboardController::settings/$1', ['as' => 'settings']);
+
+    // Catch all routes as dashboard
+    $routes->get('(:username)', 'DashboardController::index/$1', ['as' => 'dashboard']);
+});

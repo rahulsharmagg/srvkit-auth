@@ -22,9 +22,7 @@ use SrvKit\Auth\Services\TempLink;
  */
 class Services extends BaseService
 {
-    /**
-     * Returns the Settings manager class.
-     */
+
     public static function auth(?AuthConfig $config = null, bool $getShared = true): Auth
     {
         if ($getShared) {
@@ -41,5 +39,10 @@ class Services extends BaseService
         }
 
         return new TempLink($token ?? '');
+    }
+
+    public static function srvkitsession(?Session $sessionConfig = null)
+    {
+        return \Config\Services::session($sessionConfig ?? config(Session::class));
     }
 }
