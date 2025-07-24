@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace SrvKit\Auth\Config;
 
 use SrvKit\Auth\Collectors\Auth;
+use SrvKit\Auth\Collectors\Vite;
 use SrvKit\Auth\Filters\AccessFilter;
 use SrvKit\Auth\Filters\LoggedInFilter;
 use SrvKit\Auth\Filters\TemplinkFilter;
@@ -87,7 +88,15 @@ class Registrar
         return [
             'collectors' => [
                 Auth::class,
+                Vite::class
             ],
+        ];
+    }
+
+    public static function Publishers(): array
+    {
+        return [
+            'auth' => \SrvKit\Auth\Publishers\AuthPublisher::class
         ];
     }
 }

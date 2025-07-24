@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->group('auth', ['namespace' => 'SrvKit\Auth\Controllers'], function ($routes) {
     $routes->addPlaceholder('step', '[1-2]{1}');
+    $routes->get('', 'AuthController::auth');
     $routes->get('test', 'AuthController::test');
     $routes->get('login', 'LoginController::index');
     $routes->get('verify', '', ['filter' => 'verifytemp']);

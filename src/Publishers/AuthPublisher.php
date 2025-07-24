@@ -6,7 +6,7 @@ use CodeIgniter\Publisher\Publisher;
 
 class AuthPublisher extends Publisher
 {
-    protected $source = VENDORPATH .'/srvkit/auth/public';
+    protected $source = VENDORPATH .'/srvkit/auth/build';
     protected $destination = FCPATH;
-    protected $directories = ['fonts', 'images'];
+    protected $directories = [];
 }
