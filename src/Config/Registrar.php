@@ -88,7 +88,7 @@ class Registrar
         return [
             'collectors' => [
                 Auth::class,
-                Vite::class
+                // Vite::class
             ],
         ];
     }

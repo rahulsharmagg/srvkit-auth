@@ -26,7 +26,7 @@ $routes->group('auth', ['namespace' => 'SrvKit\Auth\Controllers'], function ($ro
 });
 
 /** @var RouteCollection $routes */
-$routes->group('', ['namespace' => 'SrvKit\Auth\Controllers\Dashboard', 'filter' => ['user', 'loggedin']], function ($routes) {
+$routes->group('usr', ['namespace' => 'SrvKit\Auth\Controllers\Dashboard', 'filter' => ['user', 'loggedin']], function ($routes) {
     $routes->addPlaceholder('username', '^[a-zA-Z0-9\_].+');
     $routes->get('(:username)/profile', 'DashboardController::profile/$1', ['as' => 'profile']);
     $routes->get('(:username)/profile/settings', 'DashboardController::settings/$1', ['as' => 'settings']);

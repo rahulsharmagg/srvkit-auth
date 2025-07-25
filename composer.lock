@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9ab46166e66dc8c76ec7805e68e9948",
+    "content-hash": "9751f3bf1221c1c96e2cadac0dbc2d91",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -68,49 +68,6 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v6.11.0"
             },
             "time": "2025-01-23T05:11:06+00:00"
-        },
-        {
-            "name": "srvkit/vite",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rahulsharmagg/srvkit-vite.git",
-                "reference": "2f2d26544d8ea59efd8c960e1c09819f68bc8a24"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rahulsharmagg/srvkit-vite/zipball/2f2d26544d8ea59efd8c960e1c09819f68bc8a24",
-                "reference": "2f2d26544d8ea59efd8c960e1c09819f68bc8a24",
-                "shasum": ""
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SrvKit\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rahul Sharma"
-                }
-            ],
-            "description": "Vite Plugin for PHP",
-            "homepage": "https://github.com/rahulsharmagg/srvkit-vite",
-            "keywords": [
-                "php",
-                "plugin",
-                "vite"
-            ],
-            "support": {
-                "issues": "https://github.com/rahulsharmagg/srvkit-vite/issues",
-                "source": "https://github.com/rahulsharmagg/srvkit-vite"
-            },
-            "time": "2025-07-24T18:37:18+00:00"
         }
     ],
     "packages-dev": [

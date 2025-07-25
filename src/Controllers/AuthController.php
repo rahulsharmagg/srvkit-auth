@@ -1,7 +1,6 @@
 <?php
 
 namespace SrvKit\Auth\Controllers;
-
 use SrvKit\Auth\Auth;
 use SrvKit\Auth\Authenticators\DefaultAuthenticator;
 use SrvKit\Auth\Helpers\AvatarHelper;

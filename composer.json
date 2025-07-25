@@ -3,8 +3,7 @@
     "description": "An advance and flexible authentication package for codeigniter 4+",
     "type": "library",
     "require": {
-        "firebase/php-jwt": "6.11",
-        "srvkit/vite": "dev-main"
+        "firebase/php-jwt": "6.11"
     },
     "require-dev": {
         "codeigniter4/framework": "^4.2.3",
@@ -15,7 +14,10 @@
     "autoload": {
         "psr-4": {
             "SrvKit\\Auth\\": "src/"
-        }
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
     },
     "authors": [
         {

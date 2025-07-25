@@ -62,8 +62,8 @@ class Vite extends BaseCollector
 
     public function __construct()
     {
-        require __DIR__.'/../Helpers/vite_helper.php';
-        $this->viteStatus = vite(port: 5341)->isRunning();
+        // require __DIR__.'/../Helpers/vite_helper.php';
+        // $this->viteStatus = vite(port: 5341)->isRunning();
     }
 
     /**
