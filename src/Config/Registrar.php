@@ -13,8 +13,12 @@ declare(strict_types=1);
 
 namespace SrvKit\Auth\Config;
 
-
+use SrvKit\Auth\Collectors\Auth;
+use SrvKit\Auth\Collectors\Vite;
+use SrvKit\Auth\Filters\AccessFilter;
+use SrvKit\Auth\Filters\LoggedInFilter;
 use SrvKit\Auth\Filters\TemplinkFilter;
+use SrvKit\Auth\Filters\UserFilter;
 
 class Registrar
 {
@@ -25,7 +29,10 @@ class Registrar
     {
         return [
             'aliases' => [
-                'verifytemp'     => TemplinkFilter::class,
+                'verifytemp' => TemplinkFilter::class,
+                'user'       => UserFilter::class,
+                'access'     => AccessFilter::class,
+                'loggedin'   => LoggedInFilter::class
             ],
         ];
     }
@@ -76,5 +83,20 @@ class Registrar
             ];
         }
 
-    
+    public static function Toolbar(): array
+    {
+        return [
+            'collectors' => [
+                Auth::class,
+                // Vite::class
+            ],
+        ];
+    }
+
+    public static function Publishers(): array
+    {
+        return [
+            'auth' => \SrvKit\Auth\Publishers\AuthPublisher::class
+        ];
+    }
 }

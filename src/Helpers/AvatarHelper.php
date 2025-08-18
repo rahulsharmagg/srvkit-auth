@@ -17,4 +17,11 @@ class AvatarHelper
 		$driver = new $avatarDriver();
 		return $driver->create($name);
 	}
+
+	public static function toUrl(?string $binary)
+	{
+		if(!$binary) return '';
+		$base64Data = base64_encode($binary);
+		return 'data:image/png;base64,'.$base64Data;
+	}
 }

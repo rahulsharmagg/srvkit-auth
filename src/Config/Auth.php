@@ -3,6 +3,7 @@
 namespace SrvKit\Auth\Config;
 
 use CodeIgniter\Config\BaseConfig;
+use SrvKit\Auth\Models\UserModel;
 use SrvKit\Auth\Utils\Avatars\Driver\BaseAvatarDriver;
 
 class Auth extends BaseConfig
@@ -60,27 +61,31 @@ class Auth extends BaseConfig
 
 
     /**
-     * Set theme for login/signup form 
+     * Set theme for view
      * Options: 
-     * 'dark', 'default'
+     * 'dark', 'light'
      * @var string
      */
-    public string $theme = 'dark';
+    public string $theme = 'light';
 
 
     public array $actions = [
+        'logout',
         'forgot-password', 
         'reset-password', 
         'verify-email', 
         'update-avatar',
         'update-password',
+        'update-setting'
     ];
 
     public array $views = [
         'layout'    => 'SrvKit\Auth\Views\layout',
         'action'    => 'SrvKit\Auth\Views\action',
         'login'     => 'SrvKit\Auth\Views\auth',
-        'signup'    => 'SrvKit\Auth\Views\auth'
+        'signup'    => 'SrvKit\Auth\Views\auth',
+        'dashboard' => 'SrvKit\Auth\Views\dashboard',
+        'error'     => 'SrvKit\Auth\Views\error'
     ];
 
     /**
@@ -92,4 +97,6 @@ class Auth extends BaseConfig
         'group'     => null,
         'writeable' => true,
     ];
+
+    public $userProvider = UserModel::class;
 }

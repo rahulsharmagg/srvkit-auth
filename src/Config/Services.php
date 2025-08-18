@@ -3,6 +3,7 @@
 namespace SrvKit\Auth\Config;
 
 use CodeIgniter\Config\BaseService;
+use SrvKit\Auth\Auth as AuthAuth;
 use SrvKit\Auth\Services\Auth;
 use Srvkit\Auth\Config\Auth as AuthConfig;
 use SrvKit\Auth\Services\TempLink;
@@ -22,9 +23,7 @@ use SrvKit\Auth\Services\TempLink;
  */
 class Services extends BaseService
 {
-    /**
-     * Returns the Settings manager class.
-     */
+
     public static function auth(?AuthConfig $config = null, bool $getShared = true): Auth
     {
         if ($getShared) {
@@ -34,6 +33,15 @@ class Services extends BaseService
         return new Auth($config ?? config('Auth'));
     }
 
+    public static function _auth(?AuthConfig $config = null, bool $getShared = true): AuthAuth
+    {
+        if ($getShared) {
+            return static::getSharedInstance('_auth', $config);
+        }
+
+        return new AuthAuth($config ?? config('Auth'));
+    }
+
     public static function tempLink(String $token = '', bool $getShared = true): TempLink
     {
         if ($getShared) {
@@ -41,5 +49,10 @@ class Services extends BaseService
         }
 
         return new TempLink($token ?? '');
+    }
+
+    public static function srvkitsession(?Session $sessionConfig = null)
+    {
+        return \Config\Services::session($sessionConfig ?? config(Session::class));
     }
 }

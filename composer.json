@@ -14,7 +14,10 @@
     "autoload": {
         "psr-4": {
             "SrvKit\\Auth\\": "src/"
-        }
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
     },
     "authors": [
         {

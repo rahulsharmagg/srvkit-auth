@@ -1,13 +1,14 @@
 <?php
  
- namespace SrvKit\Auth\Traits;
+namespace SrvKit\Auth\Traits;
+
+use Exception;
 
 use CodeIgniter\Cookie\Cookie;
-use Exception;
-use SrvKit\Auth\Config\Auth;
-use SrvKit\Auth\Models\UserTokenModel;
 use CodeIgniter\HTTP\IncomingRequest;
+
 use SrvKit\Auth\Entities\Token;
+use SrvKit\Auth\Models\UserTokenModel;
 
  trait RefreshTokenTrait {
  	public function generateRefreshToken():string

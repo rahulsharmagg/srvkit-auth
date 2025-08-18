@@ -5,3 +5,7 @@
 /.phpunit.result.cache 		export-ignore
 /phpunit.xml				export-ignore
 /tests						export-ignore
+/main.tailwind.css			export-ignore
+/package.json				export-ignore
+/package-lock.json			export-ignore
+/main.tailwind.css			export-ignore

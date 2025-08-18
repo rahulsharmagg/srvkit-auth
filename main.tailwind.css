@@ -1,0 +1,187 @@
+@config "./tailwind.config.js";
+@import "tailwindcss";
+
+@theme color{
+	--color-zest-50: #fdf8ed;
+	--color-zest-100: #f8ebcd;
+	--color-zest-200: #f0d597;
+	--color-zest-300: #e8bb61;
+	--color-zest-400: #e3a33c;
+	--color-zest-500: #d98324;
+	--color-zest-600: #c1641e;
+	--color-zest-700: #a1481c;
+	--color-zest-800: #83391d;
+	--color-zest-900: #6c301b;
+	--color-zest-950: #3e170a;
+	--color-sage-50: oklch(95.98% 0.019 13.47);
+	--color-sage-100: oklch(92.7% 0.035 11.2);
+	--color-sage-200: oklch(85.42% 0.073 12.39);
+	--color-sage-300: oklch(78.22% 0.117 12.8);
+	--color-sage-400: oklch(71.05% 0.169 13.1);
+	--color-sage-500: oklch(63.62% 0.232 15.24);
+	--color-sage-600: oklch(54.37% 0.203 15.38);
+	--color-sage-700: oklch(44.3% 0.165 15.34);
+	--color-sage-800: oklch(34.41% 0.129 15.33);
+	--color-sage-900: oklch(24.36% 0.09 15.65);
+	--color-sage-950: oklch(18.55% 0.068 16.1);
+	--color-melrose-50: #f5f3ff;
+	--color-melrose-100: #ede8ff;
+	--color-melrose-200: #dbd5ff;
+	--color-melrose-300: #cdc1ff;
+	--color-melrose-400: #a388fd;
+	--color-melrose-500: #8758fa;
+	--color-melrose-600: #7835f2;
+	--color-melrose-700: #6923de;
+	--color-melrose-800: #581dba;
+	--color-melrose-900: #491a98;
+	--color-melrose-950: #2c0e67;
+}
+
+@theme static{
+	--color-light-100: var(--color-melrose-100);
+	--color-light-200: var(--color-melrose-200);
+	--color-light-300: var(--color-melrose-300);
+	--color-light-400: var(--color-melrose-400);
+	--color-light-500: var(--color-melrose-500);
+	--color-light-600: var(--color-melrose-600);
+	--color-light-700: var(--color-melrose-700);
+	--color-light-800: var(--color-melrose-800);
+	--color-light-900: var(--color-melrose-900);
+
+	--color-dark-100: var(--color-zinc-100);
+	--color-dark-200: var(--color-zinc-200);
+	--color-dark-300: var(--color-zinc-300);
+	--color-dark-400: var(--color-zinc-400);
+	--color-dark-500: var(--color-zinc-500);
+	--color-dark-600: var(--color-zinc-600);
+	--color-dark-700: var(--color-zinc-700);
+	--color-dark-800: var(--color-zinc-800);
+	--color-dark-900: var(--color-zinc-900);
+}
+
+@utility button{
+	@apply text-black text-sm outline-none px-6 py-1 font-bold cursor-pointer;
+}
+
+@utility input{
+	@apply block font-sans border border-gray-400 indent-4 py-1;
+	@apply focus:border-transparent focus:outline-2 focus:outline-zest-500 focus:-outline-offset-2;
+}
+
+@utility input-sm{
+	@apply input rounded-sm text-sm indent-2;
+}
+
+@utility link{
+	@apply hover:underline;
+	@variant theme-default{
+		color: theme(color.zest.500);
+	}
+	@variant theme-dark{
+		color: theme(color.blue.400);
+	}
+
+	&.link-sm{
+		@apply text-sm;
+	}
+}
+
+
+@layer components{
+	.btn { @apply button; }
+	.btn-sm{
+		@apply button;
+		@apply rounded-sm py-1 px-4 text-sm;
+	}
+
+	.btn-primary{
+		@variant theme-light{ @apply bg-light-500 hover:bg-light-600 text-white; }
+		@variant theme-dark{ @apply bg-dark-800 hover:bg-dark-900 text-gray-50; }
+	}
+
+	.btn-secondry{
+		@variant theme-light{ @apply bg-gray-200 hover:bg-gray-300 text-light-600; }
+		@variant theme-dark{ @apply bg-white hover:bg-gray-200 text-gray-700; }
+	}
+
+	.btn-md{
+		@apply button text-base py-2 px-6;
+		@variant theme-light{ @apply bg-orange-400 hover:bg-orange-500; }
+	}
+
+	.link-primary{
+		@apply text-blue-400 hover:text-blue-500;
+		@apply theme-light:text-light-500 theme-light:hover:text-light-600;
+		@apply theme-dark:text-sage-500 theme-dark:hover:text-sage-600;
+	}
+
+	.message{
+		@apply px-2 py-[4px] mb-4 rounded-sm text-sm empty:hidden;
+
+		&.error{
+			@apply border-1 bg-red-200 text-red-500 border-red-500;
+		}
+		&.success{
+			@apply bg-green-400;
+		}
+		&.info{
+			@apply bg-blue-400;
+		}
+		&.warning{
+			@apply bg-orange-400;
+		}
+	}
+
+	.form-container{
+		@apply container min-w-[300px] max-w-3/12 m-auto border-b-4 mt-28;
+		@apply theme-dark:bg-dark-600 theme-dark:border-dark-900 theme-light:bg-gray-100 theme-light:border-light-500;
+	}
+
+	.form-header{
+		@apply w-full px-4 relative;
+		@apply theme-light:bg-light-400 theme-light:text-white;
+		@apply theme-dark:bg-dark-800 theme-dark:text-gray-50;
+		span:nth-child(2){
+			@apply theme-light:bg-light-500;
+			@apply theme-dark:bg-dark-900;
+		}
+	}
+
+	.form-content{
+		@apply p-4;
+	}
+
+	.form-input{
+		@apply flex flex-col mb-4 gap-1 text-sm;
+		@apply theme-dark:text-gray-50;
+		label {
+			font-size: inherit;
+		}
+		input{
+			@apply input-sm;
+		}
+	}
+
+	.form-radio{
+		@apply flex flex-col mb-4 gap-1 text-sm;
+		@apply theme-dark:text-gray-50;
+		.group{ @apply flex justify-between gap-4 }
+		
+		.radio{
+			@apply flex-1;
+			label{
+				@apply text-center py-1 rounded-sm;
+				@apply block bg-gray-200 hover:bg-gray-300 text-light-600;
+				@apply theme-dark:text-dark-600;
+			}
+
+			input[type="radio"]{ 
+				@apply !hidden;
+				&:checked + label{
+					@apply bg-light-500 text-white font-bold;
+					@apply theme-dark:bg-dark-800 theme-dark:text-gray-50;
+				} 
+			}
+		}
+	}
+}

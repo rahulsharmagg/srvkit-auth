@@ -19,11 +19,6 @@ if ($action == 'message-block' && empty($message->content)) {
  ?>
 
 <?= $this->extend(config(Auth::class)->views['layout']) ?>
-<?php $this->section('form-footer'); ?>
-<div class="text-center p-4">
-	<span class="block text-sm font-sans font-semibold"><?= Version::VERSION ?></span>
-</div>
-<?php $this->endSection(); ?>
 
 <?php $this->section('icon'); ?>
 	<?php if ($flashIcon == 'success'): ?>
@@ -84,14 +79,14 @@ if ($action == 'message-block' && empty($message->content)) {
 	    				<label for="email">Email</label>
 	    				<input type="text" name="email" value="<?= old('email') ?>" id="email">
 	    			</div>
-	    			<p class="text-sm font-semibold">Note: This will send you an email for restting password</p>
-	    			<div class="flex justify-end gap-6 items-center">
-	    				<a class="link" href="/auth/login">Login</a>
-	    				<button type="submit" class="btn">Confirm</button>
+	    			<p class="text-xs font-semibold mb-4 theme-dark:text-gray-50">Note: This will send you an email for restting password</p>
+	    			<div class="flex justify-between gap-6 items-center">
+	    				<div class="flex-1"><a class="link link-sm link-primary" href="/auth/login">Login</a></div>
+	    				<button type="submit" class="btn btn-sm btn-primary">Confirm</button>
 	    			</div>
 	    		</form>
 	    	</div>
-	    	<?= $this->renderSection('form-footer') ?>
+	    	<?= $this->include('\SrvKit\Auth\Views\_form-footer') ?>
 	    </div>
 	<?php break;
 	case 'reset-password': ?>
@@ -116,10 +111,12 @@ if ($action == 'message-block' && empty($message->content)) {
 						<label for="cpassword">Confirm New Password</label>
 						<input type="password" name="passconf" id="cpassword">
 					</div>
-					<button type="submit" class="btn mt-6 relative left-full -translate-x-full">Confirm</button>
+					<div class="flex justify-end">
+						<button type="submit" class="btn btn-sm btn-primary">Confirm</button>
+					</div>
 				</form>
 			</div>
-			<?= $this->renderSection('form-footer') ?>
+			<?= $this->include('\SrvKit\Auth\Views\_form-footer') ?>
 		</div>
 	<?php break;
 	case 'message-block': ?>
@@ -138,10 +135,10 @@ if ($action == 'message-block' && empty($message->content)) {
 				<?= $this->renderSection('icon') ?>
 				<div class="message text-sm font-semibold p-2 <?= esc($message->type) ?>"><?= strip_tags($message->content, "<b><u><i>") ?></div>
 				<div class="text-center">
-					<a class="link" href="/auth/login">Back to login</a>
+					<a class="link link-primary" href="/auth/login">Back to login</a>
 				</div>
 			</div>
-			<?= $this->renderSection('form-footer') ?>
+			<?= $this->include('\SrvKit\Auth\Views\_form-footer') ?>
 		</div>
 	<?php break;
 	default: ?>

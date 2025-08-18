@@ -30,11 +30,8 @@ class LoginController extends BaseController
 			$password = $this->request->getPost('password');
 			$access = $auth->login($username, $password)->obtainAccessFromLogin();
 			
-			return $this->respond([
-				'message' => 'Login Successful',
-				'status' => 'success',
-				'access' => $access
-			]);
+			$this->session->set('__srvkit_accesstoken__', $access);
+			return redirect()->route('dashboard', [$username], 301)->with('message', 'success:Login Successful')->withCookies();
 		} catch (AuthException $e) {
 			if($this->request->header('content-type') == 'application/json'){
 				return	$this->failUnauthorized($e->getMessage());
