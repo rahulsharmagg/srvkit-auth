@@ -3,7 +3,9 @@
 namespace SrvKit\Auth\Config;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Router\RouteCollection;
 use SrvKit\Auth\Models\UserModel;
+use SrvKit\Auth\Models\UserTokenModel;
 use SrvKit\Auth\Utils\Avatars\Driver\BaseAvatarDriver;
 
 class Auth extends BaseConfig
@@ -36,6 +38,13 @@ class Auth extends BaseConfig
     public const TEMP_LINK_EXP = 600; // 10 Mins
 
     /**
+     * Set the API route path at route
+     * @var string
+     * @example https://www.xyz.com/api/v1
+     */
+    public string $apiPath = 'api/v1';
+
+    /**
      * Avatar driver class name.
      *
      * This should be a subclass of BaseAvatarDriver.
@@ -57,7 +66,7 @@ class Auth extends BaseConfig
      * 
      * @var string
      */
-    public $diceBearStyle = 'icons';
+    public $diceBearStyle = 'glass';
 
 
     /**
@@ -66,9 +75,18 @@ class Auth extends BaseConfig
      * 'dark', 'light'
      * @var string
      */
-    public string $theme = 'light';
+    public string $theme = 'dark';
 
+    /**
+     * Route option for authentication
+     * @var boolean
+     */
+    public bool $routeEnabled = false;
 
+    /**
+     * Define action
+     * @var array
+     */
     public array $actions = [
         'logout',
         'forgot-password', 
@@ -99,4 +117,16 @@ class Auth extends BaseConfig
     ];
 
     public $userProvider = UserModel::class;
+
+    public function getRoleScope(?string $role): array
+    {
+        $scope = match($role) {
+            'member' => ['read'],
+            'author' => ['read',  'write', 'update'],
+            'admin'  => ['read',  'write',  'update', 'delete'],
+            'owner'  => ['read',  'write',  'update', 'delete'],
+            default  => ['read']
+        };
+        return $scope;
+    }
 }

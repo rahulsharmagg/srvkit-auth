@@ -14,11 +14,12 @@ declare(strict_types=1);
 namespace SrvKit\Auth\Config;
 
 use SrvKit\Auth\Collectors\Auth;
-use SrvKit\Auth\Collectors\Vite;
 use SrvKit\Auth\Filters\AccessFilter;
 use SrvKit\Auth\Filters\LoggedInFilter;
 use SrvKit\Auth\Filters\TemplinkFilter;
 use SrvKit\Auth\Filters\UserFilter;
+use SrvKit\Auth\Validation\LoginRules;
+use SrvKit\Auth\Validation\SignupRules;
 
 class Registrar
 {
@@ -40,14 +41,21 @@ class Registrar
     public static function Validation(): array
         {
             return [
+                'ruleSets' => [
+                    SignupRules::class,
+                    LoginRules::class
+                ],
+
+                /**
+                 * Login Rule: Validates username and password
+                 */
                 'login' => [
                     'username' => [
                         'label' => 'Username',
-                        'rules' => 'required|min_length[4]|max_length[50]',
+                        'rules' => 'required|username_or_email|min_length[3]',
                         'errors' => [
-                            'required' => 'A username is required to continue.',
+                            'required' => 'A {field} is required to continue.',
                             'min_length' => 'Too short — username must have 3 or more characters.',
-                            'max_length' => 'Too long — username can be up to 50 characters only.',
                         ]
                     ],
                     'password' => [
@@ -57,6 +65,37 @@ class Registrar
                             'required' => 'Password must be at least 6 characters long.',
                             'min_length' => 'Password must be at least 6 characters long.',
                         ]
+                    ]
+                ],
+
+                /**
+                 * Signup Rule: Validates name, username, password, email etc.
+                 */
+                'signup' => [
+                    'name' => [
+                        'label' => 'Name',
+                        'rules' => 'required|min_length[2]|max_length[50]|regex_match[/^[A-Za-z\s\.\'-]+$/]',
+                        'errors' => [
+                            'required' => '{field} is required to continue signup.',
+                            'min_length' => 'Too short - name must have 2 or more characters.',
+                            'regex_match' => 'Invalid name `{value}`.'
+                        ]
+                    ],
+                    'username' => [
+                        'label' => 'Username',
+                        'rules' => 'required|valid_username|is_unique[users.username,id,{id}]',
+                    ],
+                    'password' => [
+                        'label' => 'Password',
+                        'rules' => 'required|min_length[4]|max_length[100]',
+                    ],
+                    'email' => [
+                        'label' => 'Email',
+                        'rules' => 'required|valid_email'
+                    ],
+                    'role' => [
+                        'label' => 'Role',
+                        'rules' => 'permit_empty|in_list[member,author,admin,owner]',
                     ]
                 ],
 
@@ -87,8 +126,7 @@ class Registrar
     {
         return [
             'collectors' => [
-                Auth::class,
-                // Vite::class
+                Auth::class
             ],
         ];
     }

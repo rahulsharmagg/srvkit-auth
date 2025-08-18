@@ -10,10 +10,13 @@ use SrvKit\Auth\Config\Services;
 use SrvKit\Auth\Exceptions\AuthException;
 
 use SrvKit\Auth\Controllers\BaseController;
+use SrvKit\Auth\Exceptions\ErrorCodes;
+use SrvKit\Auth\Traits\ResponseTrait as SrvKitResponseTrait;
 
 class LoginController extends BaseController
 {
 	use ResponseTrait;
+	use SrvKitResponseTrait;
 	public function index(){
 		return view($this->config->views['login'], ['path' => $this->request->getPath()]);
 	}
@@ -26,61 +29,68 @@ class LoginController extends BaseController
 	{
 		try {
 			$auth = Services::auth();
-			$username = $this->request->getPost('username');
-			$password = $this->request->getPost('password');
-			$access = $auth->login($username, $password)->obtainAccessFromLogin();
-			
-			$this->session->set('__srvkit_accesstoken__', $access);
-			return redirect()->route('dashboard', [$username], 301)->with('message', 'success:Login Successful')->withCookies();
-		} catch (AuthException $e) {
-			if($this->request->header('content-type') == 'application/json'){
-				return	$this->failUnauthorized($e->getMessage());
+
+			$contentType = $this->request->getHeaderLine('Content-Type');
+			$allowedContentType = ["application/x-www-form-urlencoded", "application/json"];
+
+			if(!in_array($contentType, $allowedContentType)){
+				$_ = implode(", ", $allowedContentType);
+				throw new Exception("Only $_ is suppored for this endpoint", ErrorCodes::E3002_CONTENT_NOT_ALLOWED);
 			}
+
+			$payload = $this->request->getPost();
+
+			if($contentType === "application/json"){
+				$payload = $this->request->getJSON(true);
+			}
+
+			if($this->validateData($payload, 'login')){
+				$credentials = $this->validator->getValidated();
+
+				// Guess if username value is email or username
+				if(filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)){
+					$credentials['email'] = $credentials['username'];
+					unset($credentials['username']);
+				}
+
+				$result = $auth->setAuthenticator()->attempt($credentials);
+				if($result->isOK()){
+					$user = $result->extraInfo();
+					$error = null;
+
+					$auth->authenticator->login($user, $error, $access, $cookie);
+					if($error) throw $error;
+
+
+					if($this->request->isAJAX()){
+						return $this->autoRespond(["type" => "success", "message" => "Login Successful", "access" => $access, "user" => $user->sanitized]);
+					}
+
+					$this->response->setCookie($cookie);
+					$this->session->set('__srvkit_accesstoken__', $access['access_token']);
+					return redirect()->route('/', [], 301)->with('message', 'success:Login Successful')->withCookies();
+				}
+
+				throw new AuthException($result->reason(), ErrorCodes::E1001_AUTH_INVALID_CREDENTIALS);
+			}
+
+			$errors = array_values($this->validator->getErrors());
+			throw new Exception($errors[0], ErrorCodes::E2001_VALIDATION_FAILED);
+		} catch (AuthException $a) {
+			if($this->request->isAJAX()){
+				return $this->autoRespond(["error" => ["message" => $a->getMessage(), "code" => $a->getCode()], "type" => "error"], 401);
+			}
+
+			$this->session->setFlashdata('message', 'error:'.$a->getMessage());
+			return redirect()->back()->withInput();
+		} catch(Exception $e) {
+			if($this->request->isAJAX()){
+				return $this->autoRespond(["error" => ["message" => $e->getMessage(), "code" => $e->getCode()], "type" => "error"], 400);
+			}
+
 			$this->session->setFlashdata('message', 'error:'.$e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
 
-	/**
-	 * Handles login from xhr, fetch, axios etc.
-	 * @return [type] [description]
-	 */
-	public function asyncLogin(): ResponseInterface
-	{
-		try {
-			$auth = Services::auth();
-
-			if($this->validate('login')){
-				['username' => $username, 'password' => $password] = $this->validator->getValidated();
-			} else {
-				$errors = array_values($this->validator->getErrors());
-				throw new AuthException($errors[0], 'E20204');
-			}
-
-			// Get access from auth service
-			['access' => $access] = $auth->login($username, $password)->obtainAccessFromLogin();
-
-			return $this->respond([
-				'message' => 'Login Successful',
-				'status' => 'success',
-				'access' => $access
-			], 200);
-		} catch (AuthException $e) {
-			return $this->respond([
-				"status" => "error",
-				"error" => [
-					"message" => $e->getMessage(),
-					"code" => $e->getErrorCode()
-				],
-			], 401, 'Authentication Error');
-		} catch (Exception $e) {
-			return $this->respond([
-				"status" => "error",
-				"error" => [
-					"message" => $e->getMessage(),
-					"code" => $e->getCode()
-				],
-			], 400, 'Unexpected Error');
-		}
-	}
 }

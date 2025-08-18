@@ -15,6 +15,7 @@ namespace SrvKit\Auth\Collectors;
 
 use CodeIgniter\Debug\Toolbar\Collectors\BaseCollector;
 use SrvKit\Auth\Auth as SrvKitAuth;
+use SrvKit\Auth\Helpers\AvatarHelper;
 
 /**
  * Debug Toolbar Collector for Auth
@@ -43,7 +44,7 @@ class Auth extends BaseCollector
      *
      * @var bool
      */
-    protected $hasVarData = false;
+    protected $hasVarData = true;
 
     /**
      * The 'title' of this Collector.
@@ -54,10 +55,15 @@ class Auth extends BaseCollector
     protected $title = 'SrvKit';
 
     private readonly SrvKitAuth $auth;
+    private readonly object $data;
 
     public function __construct()
     {
-        $this->auth = service('_auth');
+        $this->auth = service('auth');
+        $this->data = (object) [
+            'isLoggedIn' => $this->auth->loggedIn(),
+            'currentUser' => $this->auth->user()
+        ];
     }
 
     /**
@@ -69,19 +75,47 @@ class Auth extends BaseCollector
     }
 
     /**
+     * Return the var data
+     * @return array [description]
+     */
+    public function getVarData(): array
+    {
+        if($this->data->isLoggedIn){
+            return [
+                'Current User' => [
+                    'Id' => $this->data->currentUser->id,
+                    'Full Name' => $this->data->currentUser->name,
+                    'Username' => $this->data->currentUser->username,
+                    'Email' => $this->data->currentUser->email,
+                    'Role' => $this->data->currentUser->role
+                ]
+            ];
+        }
+        return [];
+    }
+
+    /**
      * Returns the data of this collector to be formatted in the toolbar
      */
     public function display(): string
     {
         /** @var SrvKitAuth [description] */
-        // $this->auth = service('_auth');
-
         $this->auth->setAuthenticator();
-
-        if($this->auth->loggedIn()){
-            return '<p>User with is logged in.</p>';
+        if($this->data->isLoggedIn){
+            $user = $this->data->currentUser;
+            $avatar = AvatarHelper::toUrl($user->avatar);
+            return <<<HTML
+            <div style="display: flex; align-items:start;">
+                <img src="{$avatar}" width="64px" height="64px">
+                <table style="margin-top: unset;">
+                    <tr><td>Full Name </td> <td>{$user->name}</td></tr>
+                    <tr><td>Email </td> <td>{$user->email}</td></tr>
+                    <tr><td><a class="link" style="color:#017daf;" href="/user/{$user->username}">Go to My Account</a></td></tr>
+                </table>
+            </div>
+            HTML;
         }
-        return '<p>Not logged in.</p>';
+        return '<p>User is not logged in.</p>';
     }
 
     /**
