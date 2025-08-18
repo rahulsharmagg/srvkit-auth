@@ -28,4 +28,9 @@ class Token extends Entity
         $userModel = new UserModel();
         return $userModel->find($this->user_id);
     }
+
+    public function getOwner(): User
+    {
+        return $this->getUser();
+    }
 }
