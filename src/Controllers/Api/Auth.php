@@ -5,6 +5,7 @@ namespace SrvKit\Auth\Controllers\Api;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
+use SrvKit\Auth\Authentication\ValidationRules;
 use SrvKit\Auth\Config\Services;
 use SrvKit\Auth\Controllers\BaseController;
 use SrvKit\Auth\Entities\Token;
@@ -45,7 +46,7 @@ class Auth extends BaseController
 			'remember' => $remember
 		];
 		
-		if($this->validateData($loginPayload, 'login')){
+		if($this->validateData($loginPayload, ValidationRules::forLogin())){
 			$credentials = $this->validator->getValidated();
 
 			// Guess if username value is email or username
@@ -97,7 +98,7 @@ class Auth extends BaseController
 			'role'     => $role
 		];
 
-		if($this->validateData($signupPayload, 'signup')){
+		if($this->validateData($signupPayload, ValidationRules::forSignup())){
 			$userModel = new UserModel();
 
 			$row = [...$signupPayload];
