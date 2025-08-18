@@ -5,21 +5,21 @@ namespace SrvKit\Auth\Commands;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
-class AppInfo extends BaseCommand
+class Info extends BaseCommand
 {
     /**
      * The Command's Group
      *
      * @var string
      */
-    protected $group = 'SrvKit Auth';
+    protected $group = 'SrvKit';
 
     /**
      * The Command's Name
      *
      * @var string
      */
-    protected $name = 'srvkit:version';
+    protected $name = 'auth:info';
 
     /**
      * The Command's Description
@@ -33,7 +33,7 @@ class AppInfo extends BaseCommand
      *
      * @var string
      */
-    protected $usage = 'srvkit:version [arguments] [options]';
+    protected $usage = 'auth:info [arguments] [options]';
 
     /**
      * The Command's Arguments
@@ -57,6 +57,13 @@ class AppInfo extends BaseCommand
     public function run(array $params)
     {
         $version = \SrvKit\Auth\Config\Version::VERSION;
-        CLI::write("Current Version: $version", 'cyan');
+        $auth = config('Auth');
+        CLI::write("SrvKit Authentication");
+        $data = [
+            ['Key' => 'Version', 'Value' => $version],
+            ['Key' => 'Views', 'Value' => implode(', ', array_values($auth->views ?? []))],
+            ['Key' => 'API Path', 'Value' => base_url($auth->apiPath ?? 'api/auth')],
+        ];
+        CLI::table($data);
     }
 }

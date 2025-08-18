@@ -9,8 +9,15 @@ use SrvKit\Auth\Entities\User;
 use SrvKit\Auth\Exceptions\AuthException;
 use SrvKit\Auth\Models\UserModel;
 
+/**
+ * Action Trait
+ * 
+ * @property Auth $config
+ */
 trait ActionTrait {
-	protected String $action;
+
+	protected string $action;
+
 	public function action(string $action): self
 	{
 	    try {
@@ -26,10 +33,11 @@ trait ActionTrait {
 
 	/**
 	 * Render the view of the action
-	 * @param  string $action [description]
-	 * @return [type]         [description]
+	 * @param  string $action
+	 * @param  array  $data
+	 * @return string
 	 */
-	public function view(string $action = '', array $data = [])
+	public function view(string $action = '', array $data = []): string
 	{
 	    if(empty($action)){
 	        $action = $this->action;

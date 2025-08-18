@@ -9,9 +9,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services as ConfigServices;
 use SrvKit\Auth\Config\Services;
-use SrvKit\Auth\Config\Session;
 use SrvKit\Auth\Exceptions\AuthException;
-use SrvKit\Auth\Models\UserModel;
 
 /**
  * Chain Authentication Filter.
@@ -41,12 +39,18 @@ class LoggedInFilter implements FilterInterface
         $response = Services::response();
 
         try {
-            $cookie = $request->getCookie('__srvkit_refreshtoken__');
-            if(!$cookie) throw new AuthException('Invalid Request.');
-            $auth = Services::auth();
-            $token = $auth->verifyRefreshToken($cookie);
+            $auth = service('auth');
+            $loggedIn = $auth->loggedIn();
+            $view = \Config\Services::renderer();
+            if(!$loggedIn) throw new AuthException('Login session has been expired', 'E20401');
+
+            $view->setVar('isLoggedIn', $loggedIn);
+            $view->setVar('user', $auth->user());
             return;
         } catch (AuthException $e) {
+            if($request->isAJAX()){
+                return $this->autoRespond(["error" => ["message" => $e->getMessage(), "code" => $e->getCode()], "type" => "error"], 401);
+            }
             return ConfigServices::redirectresponse()->to('auth/login')->with('message', 'info:Login session expired.');
         }
     }

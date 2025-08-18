@@ -3,8 +3,7 @@
 namespace SrvKit\Auth\Config;
 
 use CodeIgniter\Config\BaseService;
-use SrvKit\Auth\Auth as AuthAuth;
-use SrvKit\Auth\Services\Auth;
+use SrvKit\Auth\Auth;
 use Srvkit\Auth\Config\Auth as AuthConfig;
 use SrvKit\Auth\Services\TempLink;
 
@@ -29,17 +28,9 @@ class Services extends BaseService
         if ($getShared) {
             return static::getSharedInstance('auth', $config);
         }
-
-        return new Auth($config ?? config('Auth'));
-    }
-
-    public static function _auth(?AuthConfig $config = null, bool $getShared = true): AuthAuth
-    {
-        if ($getShared) {
-            return static::getSharedInstance('_auth', $config);
-        }
-
-        return new AuthAuth($config ?? config('Auth'));
+        $auth = new Auth($config ?? config('Auth'));
+        $auth->setAuthenticator();
+        return $auth;
     }
 
     public static function tempLink(String $token = '', bool $getShared = true): TempLink

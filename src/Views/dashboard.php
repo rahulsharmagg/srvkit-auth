@@ -6,7 +6,6 @@ use SrvKit\Auth\Helpers\AvatarHelper;
 
 /** @var User $user */
 
-
 $router     = service('router');
 $controller = class_basename($router->controllerName());
 $method     = $router->methodName();

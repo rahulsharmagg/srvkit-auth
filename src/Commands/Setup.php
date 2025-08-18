@@ -6,21 +6,21 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use Config\Paths;
 
-class AppSetup extends BaseCommand
+class Setup extends BaseCommand
 {
     /**
      * The Command's Group
      *
      * @var string
      */
-    protected $group = 'SrvKit Auth';
+    protected $group = 'SrvKit';
 
     /**
      * The Command's Name
      *
      * @var string
      */
-    protected $name = 'srvkit:install';
+    protected $name = 'auth:install';
 
     /**
      * The Command's Description
@@ -34,7 +34,7 @@ class AppSetup extends BaseCommand
      *
      * @var string
      */
-    protected $usage = 'srvkit:install [arguments] [options]';
+    protected $usage = 'auth:install [arguments] [options]';
 
     /**
      * The Command's Arguments

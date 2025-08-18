@@ -1,16 +1,33 @@
 <?php
 
 namespace SrvKit\Auth\Controllers;
+
+use CodeIgniter\API\ResponseTrait as APIResponseTrait;
 use SrvKit\Auth\Auth;
 use SrvKit\Auth\Authenticators\DefaultAuthenticator;
+use SrvKit\Auth\Exceptions\APIResponseException;
+use SrvKit\Auth\Exceptions\AuthException;
 use SrvKit\Auth\Helpers\AvatarHelper;
+use SrvKit\Auth\Traits\ResponseTrait;
 
 class AuthController extends BaseController
 {   
+    use ResponseTrait;
+    use APIResponseTrait;
     public function test()
     {
+        throw APIResponseException::forInvalidJSON();
     	$this->response->setContentType('image/png');
     	return AvatarHelper::generate('Test');
+    }
+
+    public function ping()
+    {
+        service('toolbar')->respond = false;
+        return $this->respond([
+            'message' => 'pong',
+            'data' => $this->request->getJSON()
+        ]);
     }
 
     public function auth()
