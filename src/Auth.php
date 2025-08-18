@@ -1,22 +1,24 @@
 <?php
 namespace SrvKit\Auth;
 
+use CodeIgniter\Cookie\Cookie;
 use Exception;
 use SrvKit\Auth\Authentication\Authentication;
 use SrvKit\Auth\Authentication\AuthenticatorInterface;
 use SrvKit\Auth\Authentication\AuthenticatorResult;
 use SrvKit\Auth\Config\Auth as AuthConfig;
+use SrvKit\Auth\Entities\User;
+use SrvKit\Auth\Exceptions\AuthException;
 use SrvKit\Auth\Models\UserModel;
+use SrvKit\Auth\Traits\RefreshTokenTrait;
 
 /**
- * @method void login
+ * @method void login(User $user, ?AuthException &$error, ?array &$access)
  * @method void logout
  * @method bool loggedIn
  * @method AuthenticatorResult attempt
  */
-
 class Auth{
-
 	public const VERSION = \SrvKit\Auth\Config\Version::VERSION;
 
 	protected ?UserModel $userProvider = null;
@@ -44,7 +46,6 @@ class Auth{
 		return $this;
 	}
 
-
 	public function authenticate(?array $credentials)
 	{
 		return $this->authenticator->attempt($credentials);
@@ -52,7 +53,7 @@ class Auth{
 
 	/**
 	 * Gets current logged in user
-	 * @return [type] [description]
+	 * @return ?User
 	 */
 	public function user()
 	{
@@ -60,6 +61,11 @@ class Auth{
 			return $this->authenticator->getUser();
 		}
 		return null;
+	}
+
+	public function login(User $user, ?AuthException &$error, ?array &$access, ?Cookie &$cookie)
+	{
+		$this->authenticator->login($user, $error, $access, $cookie);
 	}
 
 	public function __call($name, $arguments)

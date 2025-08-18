@@ -33,22 +33,10 @@ class UserFilter implements FilterInterface
         if (!$request instanceof IncomingRequest) {
             return;
         }
-        $response = Services::response();
-        $uri = $request->getUri();
-        $segment = $uri->getSegment(1, '+1');
-        $iusername = $segment;
-
-        $userModel = new UserModel();
-        /** @var User $user [description] */
-        $user = $userModel->where('username', $iusername)->first();
-        if(!$user){
-            return $response->setStatusCode(403)->setBody('Invalid Request');
+        $auth = service('auth');
+        if($auth->loggedIn()){
+            view()->setVar('user', $this->auth->user());
         }
-
-        $session = Services::srvkitsession();
-        $session->set('user', $user);
-
-        // return;
     }
 
     /**

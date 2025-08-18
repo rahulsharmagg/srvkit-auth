@@ -8,10 +8,9 @@ use SrvKit\Auth\Models\UserModel;
 
 class Authentication{
 	protected ?UserModel $userProvider = null;
-
+	protected ?TokenProvider $tokenProvider = null;
 	public function __construct(protected Auth $config)
 	{
-
 	}
 
 	public function getAuthenticator(): AuthenticatorInterface

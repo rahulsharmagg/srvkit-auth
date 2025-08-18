@@ -14,14 +14,17 @@ trait ResponseTrait{
 		/** @var ResponseInterface $response [description] */
 		$response = service('response');
 
+		// It will check 'Accept:' value from header
 		$accept = $request->negotiate('media', ['text/html', 'application/json', 'application/xml']);
 
-		// dd($accept);
-
-		$template = config('Auth')->views[$template];
+		$body = json_encode($data, JSON_PRETTY_PRINT);
+		$template = config('Auth')->views[$template] ?? '';
+		if(!empty($template)){
+			$body = view($template, $data);
+		}
 
 		return match ($accept) {
-			'text/html' => $response->setStatusCode($statusCode)->setHeader('Content-Type', 'text/html')->setBody(view($template, $data)),
+			'text/html' => $response->setStatusCode($statusCode)->setHeader('Content-Type', 'text/html')->setBody($body),
 			'application/json' => $response->setStatusCode($statusCode)->setJSON($data),
 			'application/xml' => $response->setStatusCode($statusCode)->setHeader('Content-Type', 'application/xml')->setBody($this->arrayToXml($data)),
 			default => $response->setStatusCode($statusCode)->setBody(json_encode($data)),
