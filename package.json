@@ -2,13 +2,12 @@
   "name": "srvkit-auth",
   "version": "1.0.0",
   "description": "![Latest Version](https://img.shields.io/github/v/release/rahulsharmagg/srvkit-auth?label=version)\r ![CI4 Compatibility](https://img.shields.io/badge/CodeIgniter4-%5E4.4-blue?logo=codeigniter)\r [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://opensource.org/licenses/MIT)\r ![Issues](https://img.shields.io/github/issues/rahulsharmagg/srvkit-auth)\r ![Stars](https://img.shields.io/github/stars/rahulsharmagg/srvkit-auth?style=social)",
-  "main": "bump.js",
-  "type": "module",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "dev": "vite",
+    "version:bump": "node bump", 
     "build": "vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
