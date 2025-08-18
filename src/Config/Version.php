@@ -4,5 +4,5 @@ namespace SrvKit\Auth\Config;
 
 class Version
 {
-    public const VERSION = '1.1.0';
+    public const VERSION = '1.1.2';
 }
