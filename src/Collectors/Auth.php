@@ -59,7 +59,7 @@ class Auth extends BaseCollector
 
     public function __construct()
     {
-        $this->auth = service('auth');
+        $this->auth = service('auth')->setAuthenticator();
         $this->data = (object) [
             'isLoggedIn' => $this->auth->loggedIn(),
             'currentUser' => $this->auth->user()
