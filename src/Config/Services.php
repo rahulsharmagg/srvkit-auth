@@ -23,14 +23,16 @@ use SrvKit\Auth\Services\TempLink;
 class Services extends BaseService
 {
 
-    public static function auth(?AuthConfig $config = null, bool $getShared = true): Auth
+    public static function auth(bool $getShared = true): Auth
     {
         if ($getShared) {
-            return static::getSharedInstance('auth', $config);
+            return self::getSharedInstance('auth');
         }
-        $auth = new Auth($config ?? config('Auth'));
-        $auth->setAuthenticator();
-        return $auth;
+
+        /** @var AuthConfig $config */
+        $config = config('Auth');
+
+        return new Auth($config);
     }
 
     public static function tempLink(String $token = '', bool $getShared = true): TempLink
