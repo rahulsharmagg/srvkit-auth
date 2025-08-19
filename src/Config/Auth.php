@@ -81,7 +81,7 @@ class Auth extends BaseConfig
      * Route option for authentication
      * @var boolean
      */
-    public bool $routeEnabled = false;
+    public bool $routeEnabled = true;
 
     /**
      * Define action
