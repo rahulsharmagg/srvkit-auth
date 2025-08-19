@@ -19,7 +19,7 @@ class APIRoute{
             $routes->post('auth/signup', 'Auth::signup', ['as' => 'api_signup']);
             $routes->post('auth/check-username', 'Auth::getUsernameStatus');
             $routes->post('auth/reset-password', 'Auth::resetPassword');
-            $routes->match(['get', 'post', 'put', 'delete'], '(:any)', 'Auth::noResource');
+            $routes->match(['GET', 'POST', 'PUT', 'DELETE'], '(:any)', 'Auth::noResource');
         });
     }
 }
