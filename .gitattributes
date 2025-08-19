@@ -9,3 +9,4 @@
 /package.json				export-ignore
 /package-lock.json			export-ignore
 /main.tailwind.css			export-ignore
+/vite.config.js				export-ignore
